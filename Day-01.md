@@ -49,7 +49,9 @@ Similarly, Kubernetes is a container orchestration platform that automatically m
 
 **Diagram:**
 
+<img width="1070" height="510" alt="Screenshot 2026-07-11 173004" src="https://github.com/user-attachments/assets/12c24637-a515-4a6c-93c5-e9a8d4b344df" />
 
+<img width="1536" height="1024" alt="ChatGPT Image Jul 11, 2026, 04_45_16 PM" src="https://github.com/user-attachments/assets/a9863821-e855-4c0e-b840-dc2c070142d3" />
 
 **After drawing, verify your understanding:**
 
