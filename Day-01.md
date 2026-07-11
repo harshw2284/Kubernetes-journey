@@ -16,6 +16,8 @@ Kubernetes was created by Google to automate the deployment, scaling, and manage
 
 Docker revolutionized the industry by allowing developers to package code and dependencies into a single, portable container. However, when running applications in production, Docker operates entirely on a single node (one machine) and leaves unresolved gaps in system reliability.
 
+--
+
 **2. Who created Kubernetes and what was it inspired by ?**
 
 Kubernetes was created by Google employees in 2014. The project’s design and development were heavily inspired by Google's internal cluster management systems, **Borg** and **Omega**, which Google used for over a decade to manage massive-scale container workloads.
