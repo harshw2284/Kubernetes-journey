@@ -114,63 +114,149 @@ If a worker node goes down:
 
 ---
 
-### ✅ Task 3 : Understand the Anatomy
+### ✅ Task 3 : Install kubectl
 
-**`on`**: Defines the event that triggers the workflow, such as a push, pull request, or schedule.
+**`kubectl` is the CLI tool you will use to talk to your Kubernetes cluster.**
 
-**`jobs`**: Contains all the jobs that the workflow will execute.
+Install it:
 
-**`runs-on`**: Specifies the operating system or runner (virtual machine) where the job will run (for example, Ubuntu).
+```bash
+# macOS
+brew install kubectl
 
-**`steps`**: Lists the individual actions or commands inside a job.
+# Linux (amd64)
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
 
-**`uses`**: Runs a pre-built action created by GitHub or the community.
+# Windows (with chocolatey)
+choco install kubernetes-cli
+```
 
-**`run`**: Executes a shell command or script directly in the workflow.
+Verify:
 
-**`name`**: Gives a step a readable name so it is easier to identify in the workflow logs.
-
----
-
-### ✅ Task 4 : Add More Steps
-
-**Update `hello.yml` to also:**
-
-* Print the current date and time
-* Print the name of the branch that triggered the run (hint: GitHub provides this as a variable)
-* List the files in the repo
-* Print the runner's operating system
-
-```yml
-
-print:                                     #Job name
-                                           #Runner
-        runs-on: ubuntu-latest
-        steps:
-            - name: Print the current date and time
-              run: date
-            
-            - name: Print the name of the branch that triggered the run
-              run: echo "This run was triggered by a push to the ${{ github.ref_name }} branch."
-
-            - name: List the files in the repo
-              run: ls
-
-            - name: Print the runner's operating system 
-              run: echo "Running on ${{ runner.os }}"
-
+```bash
+kubectl version --client
 ```
 
 ---
 
-### ✅ Task 5 : Break It On Purpose
+### ✅ Task 4 : Set Up Your Local Cluster
 
-I added a step that runs a command that will fail (misspelled command)
+**Choose one of the following. Both give you a fully functional Kubernetes cluster on your machine.**
 
-I Pushed it and observed what happened in Actions tab
+Option A: kind (Kubernetes in Docker)
 
-Then I Fixed it and Push again
+```bash
 
-A failed pipeline usually shows a red X, failed status, or error message in the CI/CD tool. The pipeline stops at the stage or step where the problem occurred, such as testing, building, or deployment.
+# Install kind
+# macOS
+brew install kind
+
+# Linux
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/latest/kind-linux-amd64
+chmod +x ./kind
+sudo mv ./kind /usr/local/bin/kind
+
+# Create a cluster
+kind create cluster --name devops-cluster
+
+# Verify
+kubectl cluster-info
+kubectl get nodes
+```
+
+Option B: minikube
+
+```bash
+# Install minikube
+# macOS
+brew install minikube
+
+# Linux
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+# Start a cluster
+minikube start
+
+# Verify
+kubectl cluster-info
+kubectl get nodes
+```
+
+**Which one did you choose and why ?**
+
+I choosed option A: Kind because it run clusters by creating Docker containers which can act as nodes.
+
+---
+
+### ✅ Task 5 : Explore Your Cluster
+
+Now that your cluster is running, explore it:
+
+```bash
+# See cluster info
+kubectl cluster-info
+
+# List all nodes
+kubectl get nodes
+
+# Get detailed info about your node
+kubectl describe node <node-name>
+
+# List all namespaces
+kubectl get namespaces
+
+# See ALL pods running in the cluster (across all namespaces)
+kubectl get pods -A
+```
+Look at the pods running in the `kube-system` namespace:
+
+```bash
+kubectl get pods -n kube-system
+```
+
+You should see pods like `etcd`, `kube-apiserver`, `kube-scheduler`, `kube-controller-manager`, `coredns`, and `kube-proxy`. These are the architecture components you drew in Task 2 — running as pods inside the cluster.
+
+---
+
+### ✅ Task 6 : Practice Cluster Lifecycle
+
+Build muscle memory with cluster operations:
+
+```bash
+# Delete your cluster
+kind delete cluster --name devops-cluster
+# (or: minikube delete)
+
+# Recreate it
+kind create cluster --name devops-cluster
+# (or: minikube start)
+
+# Verify it is back
+kubectl get nodes
+```
+Try these useful commands:
+
+```bash
+# Check which cluster kubectl is connected to
+kubectl config current-context
+
+# List all available contexts (clusters)
+kubectl config get-contexts
+
+# See the full kubeconfig
+kubectl config view
+```
+
+**What is a kubeconfig? Where is it stored on your machine?**
+
+A kubeconfig is a YAML file used by the Kubernetes command-line tool (`kubectl`) and other components to access and authenticate with a Kubernetes cluster. It holds the cluster endpoint URLs, security certificates, tokens, and user credentials.
+
+By default, it is stored in the `.kube` directory in your user's home folder:
+
+* Linux/macOS: `~/.kube/config`
+* Windows: `%USERPROFILE%\.kube\config`
 
 ---
