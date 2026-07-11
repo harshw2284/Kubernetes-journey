@@ -148,7 +148,7 @@ kubectl run test-pod --image=nginx --dry-run=client -o yaml
 
 This is a powerful trick — use it to quickly scaffold a manifest, then customize it.
 
-**Verify**: Save the dry-run output to a file and compare its structure with your nginx-pod.yaml. What fields are the same ? What is different ?
+**Verify**: Save the dry-run output to a file and compare its structure with your nginx-pod.yaml.What fields are the same ? What is different?
 
 Different Fields:
 
