@@ -205,30 +205,72 @@ It Removed 3 extra pods.
 
 ---
 
-### ✅ Task 6 : Clean Up
+### ✅ Task 6 : Rolling Update
 
-Delete all the pods you created:
+Update the Nginx image version to trigger a rolling update:
 
 ```bash
-# Delete by name
-kubectl delete pod nginx-pod
-kubectl delete pod busybox-pod
-kubectl delete pod redis-pod
-
-# Or delete using the manifest file
-kubectl delete -f nginx-pod.yaml
-
-# Verify everything is gone
-kubectl get pods
+kubectl set image deployment/nginx-deployment nginx=nginx:1.25 -n dev
 ```
 
-Notice that when you delete a standalone Pod, it is gone forever. There is no controller to recreate it. This is why in production you use Deployments instead of bare Pods.
+Watch the rollout in real time:
+
+```bash
+kubectl rollout status deployment/nginx-deployment -n dev
+```
+
+Kubernetes replaces pods one by one — old pods are terminated only after new ones are healthy. This means zero downtime.
+
+Check the rollout history:
+
+```bash
+kubectl rollout history deployment/nginx-deployment -n dev
+```
+
+Now roll back to the previous version:
+
+```bash
+kubectl rollout undo deployment/nginx-deployment -n dev
+kubectl rollout status deployment/nginx-deployment -n dev
+```
+
+Verify the image is back to the previous version:
+
+```bash
+kubectl describe deployment nginx-deployment -n dev | grep Image
+```
+
+**Verify**: What image version is running after the rollback ?
+
+Previous Version is Running i.e 1.24
+
+---
+
+### ✅ Task 7 : Clean Up
+
+```bash
+kubectl delete deployment nginx-deployment -n dev
+kubectl delete pod nginx-dev -n dev
+kubectl delete pod nginx-staging -n staging
+kubectl delete namespace dev staging production
+```
+
+Deleting a namespace removes everything inside it. Be very careful with this in production.
+
+```bash
+kubectl get namespaces
+kubectl get pods -A
+```
+
+Verify: Are all your resources gone?
+
+YES !
 
 **Note**:
 
-* `kubectl get pods -o wide` shows the node and IP address
-* `kubectl describe pod <name>` shows events — very useful for debugging
-* `kubectl exec -it <name> -- /bin/sh` gives you a shell (use `/bin/sh` if `/bin/bash` is not available)
-* `--dry-run=client -o yaml` is your best friend for generating manifest templates
+* `selector.matchLabels` in a Deployment must match `template.metadata.labels` — if they do not match, the Deployment will not manage the Pods
+* `kubectl set image` updates a container image without editing the YAML
+* Deployments create ReplicaSets behind the scenes — you can see them with `kubectl get replicasets -n <namespace>`
+* `kubectl rollout undo` rolls back to the previous revision
 
 ---
