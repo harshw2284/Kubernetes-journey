@@ -264,6 +264,8 @@ You should see all three: a ClusterIP, a NodePort, and the LoadBalancer configur
 
 Verify: Does the LoadBalancer service also have a ClusterIP and NodePort assigned?
 
+Yes !
+
 ---
 
 ### ✅ Task 7 : Clean Up
