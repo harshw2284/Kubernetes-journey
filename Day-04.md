@@ -54,7 +54,7 @@ spec:
 
 Note the individual Pod IPs. These will change if pods restart — that is the problem Services fix.
 
-`Verify`: Are all 3 pods running ? Note down their IP addresses.
+**Verify**: Are all 3 pods running ? Note down their IP addresses.
 
 Yes !
 
