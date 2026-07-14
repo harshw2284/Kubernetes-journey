@@ -39,82 +39,126 @@ Yes !
 
 ### ✅ Task 2 : Create a ConfigMap from a File
 
-ClusterIP is the default Service type. It gives your Pods a stable internal IP that is only reachable from within the cluster.
+**1. Write a custom Nginx config file that adds a `/health` endpoint returning "healthy"**
 
-Create `clusterip-service.yaml`:
+```conf
+server {
+    listen       80;
+    server_name  localhost;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+
+    # Custom health check endpoint
+    location /health {
+        access_log off;
+        default_type text/plain;
+        return 200 'healthy';
+    }
+
+    # Error pages redirection
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+```
+
+**2. Create a ConfigMap from this file using `kubectl create configmap nginx-config --from-file=default.conf=<your-file>`**
+
+**3. The key name (`default.conf`) becomes the filename when mounted into a Pod**
+
+**Verify**: Does `kubectl get configmap nginx-config -o yaml` show the file contents ?
 
 ```yml
 apiVersion: v1
-kind: Service
+data:
+  default.conf: |
+    server {
+        listen       80;
+        server_name  localhost;
+
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+        }
+
+        # Custom health check endpoint
+        location /health {
+            access_log off;
+            default_type text/plain;
+            return 200 'healthy';
+        }
+
+        # Error pages redirection
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    }
+kind: ConfigMap
 metadata:
-  name: web-app-clusterip
-spec:
-  type: ClusterIP
-  selector:
-    app: web-app
-  ports:
-  - port: 80
-    targetPort: 80
-```
-Key fields:
-
-* `selector.app: web-app` — this Service routes traffic to all Pods with the label app: web-app
-* `port: 80` — the port the Service listens on
-* `targetPort: 80` — the port on the Pod to forward traffic to
-
-```bash
-kubectl apply -f clusterip-service.yaml
-kubectl get services
+  creationTimestamp: "2026-07-14T18:51:50Z"
+  name: nginx-config
+  namespace: default
+  resourceVersion: "88592"
+  uid: 453ec1c7-b73e-4b6a-9948-b6362bab912a
 ```
 
-You should see `web-app-clusterip` with a CLUSTER-IP address. This IP is stable — it will not change even if Pods restart.
-
-Now test it from inside the cluster:
-
-```bash
-# Run a temporary pod to test connectivity
-kubectl run test-client --image=busybox:latest --rm -it --restart=Never -- sh
-
-# Inside the test pod, run:
-wget -qO- http://web-app-clusterip
-exit
-```
-
-You should see the Nginx welcome page. The Service load-balanced your request to one of the 3 Pods.
-
-Verify: Does the Service respond ? Try running the wget command multiple times — the Service distributes traffic across all healthy Pods.
-
-Yes ! Service responded.
+Yes ! , The file contents are shown.
 
 ---
 
-### ✅ Task 3 : Create Your First Deployment
+### ✅ Task 3 : Use ConfigMaps in a Pod
 
-Kubernetes has a built-in DNS server. Every Service gets a DNS entry automatically:
+**1. Write a Pod manifest that uses `envFrom` with `configMapRef` to inject all keys from `app-config` as environment variables. Use a busybox container that prints the values.**
 
-Test this:
-
-```bash
-<service-name>.<namespace>.svc.cluster.local
-Test this:
-
-kubectl run dns-test --image=busybox:latest --rm -it --restart=Never -- sh
-
-# Inside the pod:
-# Short name (works within the same namespace)
-wget -qO- http://web-app-clusterip
-
-# Full DNS name
-wget -qO- http://web-app-clusterip.default.svc.cluster.local
-
-# Look up the DNS entry
-nslookup web-app-clusterip
-exit
+```yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: env-configmap-pod
+spec:
+  containers:
+    - name: busybox
+      command: [ "/bin/sh", "-c", "env && sleep 3600" ]
+      image: busybox:1.36
+      envFrom:
+        - configMapRef:
+            name: nginx-config
 ```
 
-Both the short name and the full DNS name resolve to the same ClusterIP. In practice, you use the short name when communicating within the same namespace and the full name when reaching across namespaces.
+**2. Write a second Pod manifest that mounts `nginx-config` as a volume at `/etc/nginx/conf.d`. Use the nginx image.**
 
-Verify: What IP does `nslookup` return? Does it match the CLUSTER-IP from `kubectl get services` ?
+```yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-volume-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.25
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: config-volume
+      mountPath: /etc/nginx/conf.d
+  volumes:
+  - name: config-volume
+    configMap:
+      name: nginx-config
+```
+
+**3. Test that the mounted config works: `kubectl exec <pod> -- curl -s http://localhost/health`**
+
+Use environment variables for simple key-value settings. Use volume mounts for full config files.
+
+**Verify**: Does the `/health` endpoint respond ?
+
+Yes ! It responded with `healthy` .
 
 ---
 
