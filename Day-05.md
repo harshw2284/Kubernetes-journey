@@ -6,7 +6,7 @@ Oour application needs configuration — database URLs, feature flags, API keys.
 
 ### ✅ Task 1: Create a ConfigMap from Literals
 
-**1. Use `kubectl create configmap` with `--from-literal` to create a ConfigMap called `app-config` with keys `APP_ENV=production`, `APP_DEBUG=false`, and `APP_PORT=8080**`
+**1. Use `kubectl create configmap` with `--from-literal` to create a ConfigMap called `app-config` with keys `APP_ENV=production`, `APP_DEBUG=false`, and `APP_PORT=8080**`**
 
 ```bash
 kubectl create configmap app-config --from-literal=APP_ENV=production --from-literal=APP_DEBUG=false --from-literal=APP_PORT=8080
