@@ -18,7 +18,13 @@ Yesterday I set resource requests and limits. Today I put that to work. Install 
 
 **Verify**: What is the current CPU and memory usage of your node ?
 
-<img width="997" height="163" alt="image" src="https://github.com/user-attachments/assets/aa055187-f65a-4fd4-9565-1e29ace383c5" />
+```txt
+NAME                        CPU(cores)   CPU(%)   MEMORY(bytes)   MEMORY(%)
+hwb-cluster-control-plane   230m         1%       640Mi           8%
+hwb-cluster-worker          39m          0%       328Mi           4%
+hwb-cluster-worker2         42m          0%       356Mi           4%
+hwb-cluster-worker3         52m          0%       382Mi           4%
+```
 
 ---
 
