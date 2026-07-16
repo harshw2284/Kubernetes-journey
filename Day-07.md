@@ -268,10 +268,10 @@ This is an intentional Kubernetes safety feature designed to prevent accidental 
 
 **Note**:
 
-* kubectl get sts is the short name for StatefulSets
-* serviceName must match an existing Headless Service
-* Pod DNS: <pod-name>.<service-name>.<namespace>.svc.cluster.local
-* PVC naming: <template-name>-<statefulset-name>-<ordinal>
+* `kubectl get sts` is the short name for StatefulSets
+* `serviceName` must match an existing Headless Service
+* Pod DNS: `<pod-name>.<service-name>.<namespace>.svc.cluster.local`
+* PVC naming: `<template-name>-<statefulset-name>-<ordinal>`
 * Pods create in order (0, 1, 2) and terminate in reverse (2, 1, 0)
 * Scaling down does not delete PVCs — data is preserved
 * Deleting a StatefulSet does not delete PVCs — clean up separately
