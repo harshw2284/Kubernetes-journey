@@ -165,6 +165,15 @@ Chart.yaml  charts  templates  values.yaml
 
 4. Edit `values.yaml` — set replicaCount to 3 and image to nginx:1.25
 
+```txt
+replicaCount: 3
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: "1.25"
+```
+
 5. Validate: `helm lint my-app`
 
 6. Preview: `helm template my-release ./my-app`
@@ -174,6 +183,15 @@ Chart.yaml  charts  templates  values.yaml
 8. Upgrade: `helm upgrade my-release ./my-app --set replicaCount=5`
 
 **Verify**: After installing, 3 replicas ? After upgrading, 5 ?
+
+```txt
+NAME                            READY   STATUS    RESTARTS       AGE
+my-app-748bd8557c-4nd4b         1/1     Running   0              6s
+my-app-748bd8557c-747jh         1/1     Running   0              6m11s
+my-app-748bd8557c-9rgcj         1/1     Running   0              6s
+my-app-748bd8557c-j6lzc         1/1     Running   0              6s
+my-app-748bd8557c-zgplf         1/1     Running   0              6s
+```
 
 Yes !
 
