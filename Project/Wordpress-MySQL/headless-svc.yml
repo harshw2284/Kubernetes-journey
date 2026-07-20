@@ -1,0 +1,17 @@
+kind: Service
+apiVersion: v1
+
+metadata:
+  name: mysql
+  namespace: capstone
+  labels:
+    app: capstone
+
+spec:
+  clusterIP: None
+  selector:
+    app: capstone
+
+  ports:
+    - port: 3306
+      targetPort: 3306
