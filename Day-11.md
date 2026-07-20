@@ -383,6 +383,8 @@ horizontalpodautoscaler.autoscaling/wordpress-hpa   Deployment/wordpress   cpu: 
 
 3. Clean up the Helm deployment
 
+---
+
 ### ✅ Task 8 : Clean Up and Reflect
 
 1. Take a final look: `kubectl get all -n capstone`
