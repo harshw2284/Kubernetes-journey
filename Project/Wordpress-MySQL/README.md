@@ -51,11 +51,8 @@ This project demonstrates how to deploy a real-world stateful application while 
 
 # ✨ Features
 
-- ✅ Dedicated Kubernetes Namespace
 - ✅ MySQL deployed using StatefulSet
-- ✅ Persistent Storage using PVC
 - ✅ Headless Service for stable MySQL networking
-- ✅ WordPress Deployment with 2 replicas
 - ✅ Secrets for database credentials
 - ✅ ConfigMap for application configuration
 - ✅ Liveness Probe
@@ -79,26 +76,6 @@ This project demonstrates how to deploy a real-world stateful application while 
 
 ---
 
-# 📖 Kubernetes Concepts Covered
-
-This project demonstrates the following Kubernetes resources:
-
-| Resource | Purpose |
-|----------|----------|
-| Namespace | Isolate project resources |
-| Secret | Store MySQL credentials securely |
-| ConfigMap | Store WordPress configuration |
-| Deployment | Manage WordPress replicas |
-| StatefulSet | Deploy stateful MySQL |
-| Headless Service | Stable DNS for StatefulSet |
-| NodePort Service | Expose WordPress |
-| PersistentVolumeClaim | Persistent MySQL storage |
-| Liveness Probe | Restart unhealthy containers |
-| Readiness Probe | Route traffic only to healthy Pods |
-| Resource Requests/Limits | Efficient resource management |
-| Horizontal Pod Autoscaler | Automatic scaling |
-
----
 
 # 🚀 Getting Started
 
@@ -322,22 +299,6 @@ The blog post should still exist, demonstrating persistent storage.
 
 ---
 
-# 📈 Horizontal Pod Autoscaler
-
-Configured with:
-
-- Minimum Replicas: **2**
-- Maximum Replicas: **10**
-- CPU Utilization Target: **50%**
-
-Verify
-
-```bash
-kubectl get hpa
-```
-
----
-
 # 📷 Sample Commands
 
 View resources
@@ -389,23 +350,3 @@ Through this project I learned:
 - Deploying applications on a Kind cluster
 
 ---
-
-# 📸 Screenshots
-
-You can add screenshots here:
-
-- WordPress Home Page
-- WordPress Admin Dashboard
-- `kubectl get all`
-- HPA Output
-- PVC
-- StatefulSet
-- Kind Cluster
-
----
-
-# 👨‍💻 Author
-
-**Harsh Bhagat**
-
-If you found this project helpful, feel free to ⭐ the repository.
