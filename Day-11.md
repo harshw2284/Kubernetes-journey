@@ -377,9 +377,9 @@ horizontalpodautoscaler.autoscaling/wordpress-hpa   Deployment/wordpress   cpu: 
 
 ### ✅ Task 7 : (Bonus) Compare with Helm (Day 10)
 
-1. Install WordPress using `helm install wp-helm bitnami/wordpress` in a separate namespace
+**1. Install WordPress using `helm install wp-helm bitnami/wordpress` in a separate namespace**
 
-2. Compare: how many resources did each approach create? Which gives more control ?
+**2. Compare: how many resources did each approach create? Which gives more control ?**
 
 Resource Count & Control Comparison
 
@@ -400,7 +400,7 @@ Resource Count & Control Comparison
 
  * Helm: Abstracts boilerplate and manages app lifecycles (install, upgrade, rollback) quickly, but limits customization to what is exposed in values.yaml.
 
-3. Clean up the Helm deployment
+**3. Clean up the Helm deployment**
 
 ---
 
