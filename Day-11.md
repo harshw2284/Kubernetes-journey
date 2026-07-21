@@ -379,7 +379,26 @@ horizontalpodautoscaler.autoscaling/wordpress-hpa   Deployment/wordpress   cpu: 
 
 1. Install WordPress using `helm install wp-helm bitnami/wordpress` in a separate namespace
 
-2. Compare: how many resources did each approach create? Which gives more control?
+2. Compare: how many resources did each approach create? Which gives more control ?
+
+Resource Count & Control Comparison
+
+1) Resource Count
+* Manual Manifests Approach: 8 distinct top-level resources
+
+(1 Namespace, 1 Secret, 1 ConfigMap, 2 Services, 1 StatefulSet, 1 Deployment, 1 HPA — plus dynamic child objects like 1 PVC, 1 ReplicaSet, and Pods).
+
+* Helm Approach (bitnami/wordpress): 10–15+ resources
+
+(Auto-generates Deployments/StatefulSets for WordPress & MariaDB, multiple Services, Secrets, ConfigMaps, PVCs, ServiceAccounts, and Security Policies).
+
+2) Which Gives More Control ?
+
+* Manual Manifests give maximum control.
+
+ * Manual YAMLs: You own every parameter (probes, mounts, resource limits, DNS). Best for custom setups and learning Kubernetes core concepts.
+
+ * Helm: Abstracts boilerplate and manages app lifecycles (install, upgrade, rollback) quickly, but limits customization to what is exposed in values.yaml.
 
 3. Clean up the Helm deployment
 
