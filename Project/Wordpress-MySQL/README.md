@@ -249,54 +249,35 @@ kubectl get hpa
 kubectl get all -n capstone
 ```
 
-Expected resources:
-
-- Namespace
-- Deployment
-- StatefulSet
-- Services
-- Pods
-- PVC
-- ConfigMap
-- Secret
-- HPA
-
 ---
 
-# 🔁 Self-Healing Test
+## 6. Installing Argo CD
 
-Delete a WordPress Pod
+- Create a namespace for Argo CD:
+  ```bash
+  kubectl create namespace argocd
+  ```
 
-```bash
-kubectl delete pod <wordpress-pod-name>
-```
+- Apply the Argo CD manifest:
+  ```bash
+  kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+  ```
 
-A new Pod should be created automatically.
+- Check services in Argo CD namespace:
+  ```bash
+  kubectl get svc -n argocd
+  ```
 
-Delete the MySQL Pod
+- Expose Argo CD server using NodePort:
+  ```bash
+  kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
+  ```
 
-```bash
-kubectl delete pod mysql-0
-```
-
-The StatefulSet recreates the Pod while preserving the database using the Persistent Volume.
-
----
-
-# 💾 Persistence Test
-
-1. Create a blog post.
-2. Delete the MySQL Pod.
-
-```bash
-kubectl delete pod mysql-0
-```
-
-3. Wait until MySQL becomes Running.
-4. Refresh WordPress.
-
-The blog post should still exist, demonstrating persistent storage.
-
+- Forward ports to access Argo CD server:
+  ```bash
+  kubectl port-forward -n argocd service/argocd-server 8443:443 &
+  ```
+  
 ---
 
 # 📷 Sample Commands
