@@ -1,6 +1,6 @@
 # Kubernetes – Day 04 - Kubernetes Services
 
-I have Deployments running multiple Pods, but how do I actually talk to them? Pods get random IP addresses that change every time they restart. Services solve this by giving your Pods a stable network endpoint. Today I will create different types of Services and understand when to use each one.
+I have Deployments running multiple Pods, but how do I actually talk to them? Pods get random IP addresses that change every time they restart. Services solve this by giving your Pods a stable network endpoint(IP Address , DNS name). Today I will create different types of Services and understand when to use each one.
 
 ---
 
